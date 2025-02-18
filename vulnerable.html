@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vulnerable HTML Page</title>
+    <script>
+        // 🚨 XSS: Unescaped user input directly written to the page
+        var untrustedInput = location.search;
+        document.write("User input: " + untrustedInput);
+
+        // 🚨 XSS: Using innerHTML unsafely
+        function updateContent() {
+            var userContent = document.getElementById("userInput").value;
+            document.getElementById("output").innerHTML = userContent;
+        }
+
+        // 🚨 Insecure JavaScript Execution: Using eval()
+        function runCode() {
+            var userCode = document.getElementById("codeInput").value;
+            eval(userCode);  // HIGHLY DANGEROUS
+        }
+
+        // 🚨 Unencrypted Data Storage
+        localStorage.setItem("authToken", "123456"); // Storing sensitive info unsafely
+
+        // 🚨 Insecure HTTP Request
+        fetch("http://insecure-api.com/data")
+            .then(response => response.text())
+            .then(data => console.log(data));
+
+        // 🚨 Dangerous setTimeout with User Input
+        var userTimeout = document.getElementById("timeoutInput").value;
+        setTimeout(userTimeout, 1000); // Executes user input as code
+    </script>
+</head>
+<body>
+    <h1>Test Page for SAST Workflow</h1>
+
+    <!-- 🚨 SQL Injection (Simulated) -->
+    <input type="text" id="sqlInput" value="'; DROP TABLE users; --">
+    <button onclick="alert('Executing: ' + document.getElementById('sqlInput').value)">Submit</button>
+
+    <!-- 🚨 More XSS Risks -->
+    <iframe src="javascript:alert('XSS')"></iframe> 
+    <img src="x" onerror="alert('XSS via image error')">
+
+    <!-- Unsafe User Input Display -->
+    <input type="text" id="userInput">
+    <button onclick="updateContent()">Update Content</button>
+    <div id="output"></div>
+
+    <!-- User Code Execution -->
+    <input type="text" id="codeInput" placeholder="Enter JavaScript Code">
+    <button onclick="runCode()">Run Code</button>
+
+    <!-- Unsafe Timeout -->
+    <input type="text" id="timeoutInput" placeholder="Enter Code for setTimeout">
+    <button onclick="setTimeout(userTimeout, 1000)">Set Timeout</button>
+</body>
+</html>
